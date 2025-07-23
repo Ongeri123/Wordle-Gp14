@@ -1,0 +1,120 @@
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  background-color: #1e2761;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #599ce9;
+}
+
+.navbar-right {
+  position: relative;
+  margin-left: auto;
+}
+
+.settings-toggle {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.settings-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.settings-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+  min-width: 250px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+/* Game Settings Styles */
+.game-settings {
+  background-color: rgba(30, 30, 60, 0.95);
+  border-radius: 8px;
+  padding: 15px;
+  color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.game-settings h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #599ce9;
+}
+
+.setting-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.setting-group label {
+  margin-right: 10px;
+}
+
+.setting-group select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+/* Dark Mode Styles */
+.app-wrapper.dark-mode {
+  background-color: #333333;
+}
+
+.dark-mode .app-container {
+  background-color: #444444;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .navbar {
+  background-color: #222222;
+}
+
+.dark-mode .navbar-brand {
+  color: #a0a0a0;
+}
+
+.dark-mode .settings-toggle {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #cccccc;
+}
+
+.dark-mode .game-settings {
+  background-color: rgba(50, 50, 50, 0.95);
+}
+
+.dark-mode .game-settings h3 {
+  color: #cccccc;
+}
+
+.dark-mode .key-btn {
+  background-color: #555555;
+  color: white;
+}
+
+.dark-mode .key-btn:hover {
+  background-color: #666666;
+}

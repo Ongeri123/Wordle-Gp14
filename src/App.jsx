@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import GuessGrid from './components/GuessGrid';
 import AlertMessage from './components/AlertMessage';
 import Keyboard from './components/Keyboard';
+import Navbar from './components/Navbar';
 import wordData from './db.json';
 
 
@@ -35,6 +36,7 @@ const App = () => {
   const [currentCol, setCurrentCol] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState({});
+  const [gameSettings, setGameSettings] = useState({ difficulty: 'normal', darkMode: false });
 
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
   const isLose = currentRow >= 6 && !isWin;
@@ -137,19 +139,27 @@ const App = () => {
     };
   }, [currentRow, currentCol, gameOver]); // Removed guesses from dependency array to avoid unnecessary re-renders
 
+  const handleSettingsChange = (newSettings) => {
+    setGameSettings(newSettings);
+    // Apply settings changes as needed
+    // For example, you could adjust game difficulty here
+  };
+
   return (
-    <div className="app-container">
-      <h1 className="game-title">Wordle</h1>
-      {/* For development purposes - remove in production */}
-      <div style={{ fontSize: '12px', marginBottom: '10px', color: '#fff' }}>Target: {targetWord}</div>
-      <GuessGrid guesses={guesses} />
-      {showAlert && (
-        <AlertMessage 
-          message={isWin ? "🎉 You Win!" : isLose ? "😢 Try Again! The word was " + targetWord : ""} 
-          visible={isWin || isLose} 
-        />
-      )}
-      <Keyboard onKeyPress={handleKeyPress} letterStatus={keyboardStatus} />
+    <div className={`app-wrapper ${gameSettings.darkMode ? 'dark-mode' : ''}`}>
+      <Navbar onSettingsChange={handleSettingsChange} gameSettings={gameSettings} />
+      <div className="app-container">
+        {/* For development purposes - remove in production */}
+        <div style={{ fontSize: '12px', marginBottom: '10px', color: '#fff' }}>Target: {targetWord}</div>
+        <GuessGrid guesses={guesses} />
+        {showAlert && (
+          <AlertMessage 
+            message={isWin ? "🎉 You Win!" : isLose ? "😢 Try Again! The word was " + targetWord : ""} 
+            visible={isWin || isLose} 
+          />
+        )}
+        <Keyboard onKeyPress={handleKeyPress} letterStatus={keyboardStatus} />
+      </div>
     </div>
   );
 };
