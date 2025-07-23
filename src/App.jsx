@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import GuessGrid from './components/GuessGrid';
 import AlertMessage from './components/AlertMessage';
 import Keyboard from './components/Keyboard';
-
-// List of possible target words
-const WORDS = ['REACT', 'GAMES', 'WORLD', 'CODER', 'PIXEL'];
+import wordData from './db.json';
 
 
 // Create a fresh empty row each time to avoid shared references
@@ -18,9 +16,10 @@ const createEmptyRow = () => [
 ];
 
 const App = () => {
-  // Select a random target word
+  // Select a random target word from the JSON file
   const [targetWord, setTargetWord] = useState(() => {
-    return WORDS[Math.floor(Math.random() * WORDS.length)];
+    const words = wordData.words;
+    return words[Math.floor(Math.random() * words.length)];
   });
   
   const [guesses, setGuesses] = useState([
