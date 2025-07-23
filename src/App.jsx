@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import GuessGrid from './components/GuessGrid';
+import AlertMessage from './components/AlertMessage';
+import Keyboard from './components/Keyboard';
 
-function App() {
-  const [count, setCount] = useState(0)
+const emptyRow = () => Array(5).fill({ letter: '', status: '' });
+
+const App = () => {
+  const [guesses, setGuesses] = useState([
+    [
+      { letter: 'W', status: 'correct' },
+      { letter: 'O', status: 'wrong' },
+      { letter: 'R', status: 'misplaced' },
+      { letter: 'D', status: 'wrong' },
+      { letter: 'S', status: 'wrong' },
+    ],
+    [
+      { letter: 'G', status: 'correct' },
+      { letter: 'A', status: 'correct' },
+      { letter: 'M', status: 'correct' },
+      { letter: 'E', status: 'correct' },
+      { letter: 'S', status: 'correct' },
+    ],
+    ...Array(4).fill(emptyRow())
+  ]);
+
+  const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
+  const isLose = guesses.length >= 6 && !isWin;
+  const [showAlert, setShowAlert] = useState(true);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="app-container">
+      <h1 className="game-title">Wordle</h1>
+      <GuessGrid guesses={guesses} />
+      {showAlert && (
+        <AlertMessage message={isWin ? "🎉 You Win!" : isLose ? "😢 Try Again!" : ""} visible={isWin || isLose} />
+      )}
+      <Keyboard />
+    </div>
+  );
+};
 
-export default App
+export default App;
