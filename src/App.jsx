@@ -4,6 +4,9 @@ import GuessGrid from './components/GuessGrid';
 import AlertMessage from './components/AlertMessage';
 import Keyboard from './components/Keyboard';
 
+// List of possible target words
+const WORDS = ['REACT', 'GAMES', 'WORLD', 'CODER', 'PIXEL'];
+
 
 // Create a fresh empty row each time to avoid shared references
 const createEmptyRow = () => [
@@ -15,6 +18,11 @@ const createEmptyRow = () => [
 ];
 
 const App = () => {
+  // Select a random target word
+  const [targetWord, setTargetWord] = useState(() => {
+    return WORDS[Math.floor(Math.random() * WORDS.length)];
+  });
+  
   const [guesses, setGuesses] = useState([
     createEmptyRow(),
     createEmptyRow(),
@@ -27,10 +35,51 @@ const App = () => {
   const [currentRow, setCurrentRow] = useState(0); // Start at row 1 (index 0)
   const [currentCol, setCurrentCol] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [keyboardStatus, setKeyboardStatus] = useState({});
 
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
   const isLose = currentRow >= 6 && !isWin;
   const [showAlert, setShowAlert] = useState(true);
+
+  // Check the current guess against the target word
+  const checkGuess = (guess) => {
+    const result = [...guess];
+    const targetLetters = targetWord.split('');
+    const newKeyboardStatus = {...keyboardStatus};
+    
+    // First pass: check for correct letters
+    for (let i = 0; i < 5; i++) {
+      if (guess[i].letter === targetLetters[i]) {
+        result[i].status = 'correct';
+        targetLetters[i] = null; // Mark as used
+        newKeyboardStatus[guess[i].letter] = 'correct';
+      }
+    }
+    
+    // Second pass: check for misplaced letters
+    for (let i = 0; i < 5; i++) {
+      if (result[i].status === '') { // Skip already marked correct
+        const letterIndex = targetLetters.indexOf(guess[i].letter);
+        if (letterIndex !== -1) {
+          result[i].status = 'misplaced';
+          targetLetters[letterIndex] = null; // Mark as used
+          // Only update keyboard status if not already 'correct'
+          if (newKeyboardStatus[guess[i].letter] !== 'correct') {
+            newKeyboardStatus[guess[i].letter] = 'misplaced';
+          }
+        } else {
+          result[i].status = 'wrong';
+          // Only update keyboard status if not already set
+          if (!newKeyboardStatus[guess[i].letter]) {
+            newKeyboardStatus[guess[i].letter] = 'wrong';
+          }
+        }
+      }
+    }
+    
+    setKeyboardStatus(newKeyboardStatus);
+    return result;
+  };
 
   const handleKeyPress = (key) => {
     if (gameOver) return;
@@ -44,13 +93,28 @@ const App = () => {
         setCurrentCol(currentCol - 1);
       }
     } else if (key === 'Enter') {
-      // Handle enter - for now just move to next row if current row is complete
+      // Handle enter - check if the row is complete
       if (currentCol === 5) {
-        if (currentRow < 5) {
-          setCurrentRow(currentRow + 1);
-          setCurrentCol(0);
-        } else {
-          setGameOver(true);
+        const currentGuess = guesses[currentRow];
+        const guessWord = currentGuess.map(g => g.letter).join('');
+        
+        // Check if all cells have letters
+        if (currentGuess.every(cell => cell.letter)) {
+          const newGuesses = guesses.map(row => [...row]);
+          newGuesses[currentRow] = checkGuess(currentGuess);
+          setGuesses(newGuesses);
+          
+          // Check if the guess is correct
+          const isCorrect = guessWord === targetWord;
+          
+          if (isCorrect) {
+            setGameOver(true);
+          } else if (currentRow < 5) {
+            setCurrentRow(currentRow + 1);
+            setCurrentCol(0);
+          } else {
+            setGameOver(true);
+          }
         }
       }
     } else if (/^[A-Za-z]$/.test(key) && currentCol < 5) {
@@ -77,11 +141,16 @@ const App = () => {
   return (
     <div className="app-container">
       <h1 className="game-title">Wordle</h1>
+      {/* For development purposes - remove in production */}
+      <div style={{ fontSize: '12px', marginBottom: '10px', color: '#fff' }}>Target: {targetWord}</div>
       <GuessGrid guesses={guesses} />
       {showAlert && (
-        <AlertMessage message={isWin ? " You Win!" : isLose ? "Try Again!" : ""} visible={isWin || isLose} />
+        <AlertMessage 
+          message={isWin ? "🎉 You Win!" : isLose ? "😢 Try Again! The word was " + targetWord : ""} 
+          visible={isWin || isLose} 
+        />
       )}
-      <Keyboard onKeyPress={handleKeyPress} />
+      <Keyboard onKeyPress={handleKeyPress} letterStatus={keyboardStatus} />
     </div>
   );
 };

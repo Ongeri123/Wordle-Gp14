@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Keyboard = ({ onKeyPress }) => {
+const Keyboard = ({ onKeyPress, letterStatus = {} }) => {
   const rows = [
     ['Q','W','E','R','T','Y','U','I','O','P'],
     ['A','S','D','F','G','H','J','K','L'],
@@ -13,6 +13,19 @@ const Keyboard = ({ onKeyPress }) => {
     }
   };
 
+  const getKeyClass = (key) => {
+    if (key === 'Enter' || key === '⌫') {
+      return `key-btn wide`;
+    }
+    
+    const status = letterStatus[key];
+    if (status) {
+      return `key-btn ${status}`;
+    }
+    
+    return 'key-btn';
+  };
+
   return (
     <div className="keyboard">
       {rows.map((row, idx) => (
@@ -20,7 +33,7 @@ const Keyboard = ({ onKeyPress }) => {
           {row.map(key => (
             <button 
               key={key} 
-              className={`key-btn ${key === 'Enter' || key === '⌫' ? 'wide' : ''}`}
+              className={getKeyClass(key)}
               onClick={() => handleClick(key)}
             >
               {key}
