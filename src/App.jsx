@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import GuessGrid from './components/GuessGrid';
 import AlertMessage from './components/AlertMessage';
 import Keyboard from './components/Keyboard';
+
 
 const emptyRow = () => Array(5).fill({ letter: '', status: '' });
 
@@ -29,6 +31,7 @@ const App = () => {
   const [showAlert, setShowAlert] = useState(true);
 
   return (
+
     <div className="app-container">
       <h1 className="game-title">Wordle</h1>
       <GuessGrid guesses={guesses} />
@@ -39,5 +42,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;
