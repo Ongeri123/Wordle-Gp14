@@ -12,7 +12,7 @@ library.add(faCog, faQuestion, faForward, faRedo);
  * Navigation bar component with game controls
  * Contains Next, Retry, Help, and Settings buttons
  */
-const Navbar = ({ onSettingsChange, gameSettings, gameStats, targetWord, guesses, isWin, currentRow, onNext, onRetry }) => {
+const Navbar = ({ onSettingsChange, gameSettings, gameStats, targetWord, guesses, isWin, currentRow, onNext, onRetry, onSkipDay }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showStats, setShowStats] = useState(false);
@@ -33,6 +33,13 @@ const Navbar = ({ onSettingsChange, gameSettings, gameStats, targetWord, guesses
           onClick={onRetry}
         >
           <FontAwesomeIcon icon={faRedo} /> Retry
+        </button>
+        
+        <button 
+          className="skip-day-toggle" 
+          onClick={onSkipDay}
+        >
+          Skip Day
         </button>
         
         <button 

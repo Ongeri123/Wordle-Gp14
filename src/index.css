@@ -234,7 +234,8 @@ html, body {
 .settings-toggle,
 .help-toggle,
 .next-toggle,
-.retry-toggle {
+.retry-toggle,
+.skip-day-toggle {
   background-color: #599ce9;
   color: white;
   border: none;
@@ -252,7 +253,8 @@ html, body {
 .settings-toggle:hover,
 .help-toggle:hover,
 .next-toggle:hover,
-.retry-toggle:hover {
+.retry-toggle:hover,
+.skip-day-toggle:hover {
   background-color: #4a8bd1;
 }
 

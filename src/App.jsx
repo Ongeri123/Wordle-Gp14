@@ -20,11 +20,20 @@ const createEmptyRow = () => [
  * Main App component - handles game state and logic
  */
 const App = () => {
-  // Game state variables
-  const [targetWord, setTargetWord] = useState(() => {
+  // Get daily word based on current date (with optional day offset)
+  const getDailyWord = (dayOffset = 0) => {
+    const today = new Date();
+    today.setDate(today.getDate() + dayOffset);
+    const startDate = new Date('2024-01-01'); // Reference date
+    const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
     const words = wordData.words;
-    return words[Math.floor(Math.random() * words.length)];
-  });
+    return words[daysSinceStart % words.length];
+  };
+
+  const [dayOffset, setDayOffset] = useState(0);
+
+  // Game state variables
+  const [targetWord, setTargetWord] = useState(() => getDailyWord(dayOffset));
   
   const [guesses, setGuesses] = useState([
     createEmptyRow(),
@@ -50,6 +59,31 @@ const App = () => {
       guessDistribution: [0, 0, 0, 0, 0, 0]
     };
   });
+
+  // Check if it's a new day and reset game state
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const lastPlayDate = localStorage.getItem('lastPlayDate');
+    
+    if (lastPlayDate !== today) {
+      // New day - reset game state
+      setTargetWord(getDailyWord(dayOffset));
+      setGuesses([
+        createEmptyRow(),
+        createEmptyRow(),
+        createEmptyRow(),
+        createEmptyRow(),
+        createEmptyRow(),
+        createEmptyRow()
+      ]);
+      setCurrentRow(0);
+      setCurrentCol(0);
+      setGameOver(false);
+      setKeyboardStatus({});
+      setGameCompleted(false);
+      localStorage.setItem('lastPlayDate', today);
+    }
+  }, []);
 
   // Game status checks
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
@@ -198,6 +232,7 @@ const App = () => {
     // Save to state and localStorage
     setGameStats(newStats);
     localStorage.setItem('wordleStats', JSON.stringify(newStats));
+    localStorage.setItem('lastPlayDate', new Date().toDateString());
   };
 
   /**
@@ -208,12 +243,32 @@ const App = () => {
   };
 
   /**
-   * Starts a new game with a different word
+   * Skip to next day's word
+   */
+  const handleSkipDay = () => {
+    const newOffset = dayOffset + 1;
+    setDayOffset(newOffset);
+    setTargetWord(getDailyWord(newOffset));
+    setGuesses([
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow()
+    ]);
+    setCurrentRow(0);
+    setCurrentCol(0);
+    setGameOver(false);
+    setKeyboardStatus({});
+    setGameCompleted(false);
+  };
+
+  /**
+   * Starts a new game with the daily word
    */
   const handleNext = () => {
-    const words = wordData.words;
-    const newWord = words[Math.floor(Math.random() * words.length)];
-    setTargetWord(newWord);
+    setTargetWord(getDailyWord(dayOffset));
     setGuesses([
       createEmptyRow(),
       createEmptyRow(),
@@ -258,6 +313,7 @@ const App = () => {
         currentRow={currentRow}
         onNext={handleNext}
         onRetry={handleRetry}
+        onSkipDay={handleSkipDay}
       />
       <div className="app-container">
         {/* For development purposes - remove in production */}
