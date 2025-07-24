@@ -199,6 +199,76 @@
   background-color: #467c42;
 }
 
+/* Game Options Modal */
+.game-options-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.game-options-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+.game-options-content h3 {
+  margin: 0 0 15px 0;
+  color: #313ab9;
+  font-size: 1.5rem;
+}
+
+.game-options-content p {
+  margin: 0 0 25px 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.game-options-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.option-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.retry-btn {
+  background-color: #599ce9;
+  color: white;
+}
+
+.retry-btn:hover {
+  background-color: #4a8bd1;
+}
+
+.wait-btn {
+  background-color: #787c7e;
+  color: white;
+}
+
+.wait-btn:hover {
+  background-color: #6a6e70;
+}
+
 /* Dark Mode Styles */
 .app-wrapper.dark-mode {
   background-color: #333333;
@@ -251,4 +321,17 @@
 
 .dark-mode .key-btn:hover {
   background-color: #666666;
+}
+
+.dark-mode .game-options-content {
+  background-color: #444444;
+  color: white;
+}
+
+.dark-mode .game-options-content h3 {
+  color: #a0a0a0;
+}
+
+.dark-mode .game-options-content p {
+  color: #cccccc;
 }

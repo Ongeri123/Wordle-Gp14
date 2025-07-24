@@ -90,6 +90,7 @@ const App = () => {
   const isLose = currentRow >= 6 && !isWin;
   const [showAlert, setShowAlert] = useState(true);
   const [gameCompleted, setGameCompleted] = useState(false);
+  const [showGameOptions, setShowGameOptions] = useState(false);
 
   /**
    * Evaluates a guess against the target word
@@ -169,6 +170,7 @@ const App = () => {
             // Update stats for win
             updateGameStats(true, currentRow);
             setGameCompleted(true);
+            setShowGameOptions(true);
           } else if (currentRow < 5) {
             setCurrentRow(currentRow + 1);
             setCurrentCol(0);
@@ -177,6 +179,7 @@ const App = () => {
             // Update stats for loss
             updateGameStats(false);
             setGameCompleted(true);
+            setShowGameOptions(true);
           }
         }
       }
@@ -299,6 +302,14 @@ const App = () => {
     setCurrentCol(0);
     setGameOver(false);
     setKeyboardStatus({});
+    setShowGameOptions(false);
+  };
+
+  /**
+   * Wait for next word (close options modal)
+   */
+  const handleWaitNext = () => {
+    setShowGameOptions(false);
   };
 
   return (
@@ -324,6 +335,22 @@ const App = () => {
             message={isWin ? "🎉 You Win!" : isLose ? "😢 Try Again! The word was " + targetWord : ""} 
             visible={isWin || isLose} 
           />
+        )}
+        {showGameOptions && (
+          <div className="game-options-modal">
+            <div className="game-options-content">
+              <h3>{isWin ? "Congratulations!" : "Game Over"}</h3>
+              <p>{isWin ? "You solved today's puzzle!" : `The word was: ${targetWord}`}</p>
+              <div className="game-options-buttons">
+                <button onClick={handleRetry} className="option-btn retry-btn">
+                  Play Again
+                </button>
+                <button onClick={handleWaitNext} className="option-btn wait-btn">
+                  Wait for Next Word
+                </button>
+              </div>
+            </div>
+          </div>
         )}
         <Keyboard onKeyPress={handleKeyPress} letterStatus={keyboardStatus} />
       </div>
