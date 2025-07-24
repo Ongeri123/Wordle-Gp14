@@ -1,6 +1,9 @@
 import React from 'react';
 import LetterBox from './LetterBox';
 
+/**
+ * Displays the 6x5 grid of letter boxes for guesses
+ */
 const GuessGrid = ({ guesses }) => {
   return (
     <div className="guess-grid">

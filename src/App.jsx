@@ -16,8 +16,11 @@ const createEmptyRow = () => [
   { letter: '', status: '' }
 ];
 
+/**
+ * Main App component - handles game state and logic
+ */
 const App = () => {
-  // Select a random target word from the JSON file
+  // Game state variables
   const [targetWord, setTargetWord] = useState(() => {
     const words = wordData.words;
     return words[Math.floor(Math.random() * words.length)];
@@ -32,17 +35,21 @@ const App = () => {
     createEmptyRow()
   ]);
   
-  const [currentRow, setCurrentRow] = useState(0); // Start at row 1 (index 0)
+  const [currentRow, setCurrentRow] = useState(0);
   const [currentCol, setCurrentCol] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState({});
   const [gameSettings, setGameSettings] = useState({ difficulty: 'normal', darkMode: false });
 
+  // Game status checks
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
   const isLose = currentRow >= 6 && !isWin;
   const [showAlert, setShowAlert] = useState(true);
 
-  // Check the current guess against the target word
+  /**
+   * Evaluates a guess against the target word
+   * Returns array with letter statuses (correct, misplaced, wrong)
+   */
   const checkGuess = (guess) => {
     const result = [...guess];
     const targetLetters = targetWord.split('');
@@ -82,6 +89,10 @@ const App = () => {
     return result;
   };
 
+  /**
+   * Handles keyboard input for the game
+   * Processes letters, backspace, and enter key
+   */
   const handleKeyPress = (key) => {
     if (gameOver) return;
     
@@ -127,7 +138,9 @@ const App = () => {
     }
   };
 
-  // Handle physical keyboard input
+  /**
+   * Sets up event listener for physical keyboard input
+   */
   useEffect(() => {
     const handleKeyDown = (e) => {
       handleKeyPress(e.key);
@@ -139,15 +152,60 @@ const App = () => {
     };
   }, [currentRow, currentCol, gameOver]); // Removed guesses from dependency array to avoid unnecessary re-renders
 
+  /**
+   * Updates game settings (difficulty, dark mode)
+   */
   const handleSettingsChange = (newSettings) => {
     setGameSettings(newSettings);
-    // Apply settings changes as needed
-    // For example, you could adjust game difficulty here
+  };
+
+  /**
+   * Starts a new game with a different word
+   */
+  const handleNext = () => {
+    const words = wordData.words;
+    const newWord = words[Math.floor(Math.random() * words.length)];
+    setTargetWord(newWord);
+    setGuesses([
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow()
+    ]);
+    setCurrentRow(0);
+    setCurrentCol(0);
+    setGameOver(false);
+    setKeyboardStatus({});
+  };
+
+  /**
+   * Resets the current game with the same word
+   */
+  const handleRetry = () => {
+    setGuesses([
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow(),
+      createEmptyRow()
+    ]);
+    setCurrentRow(0);
+    setCurrentCol(0);
+    setGameOver(false);
+    setKeyboardStatus({});
   };
 
   return (
     <div className={`app-wrapper ${gameSettings.darkMode ? 'dark-mode' : ''}`}>
-      <Navbar onSettingsChange={handleSettingsChange} gameSettings={gameSettings} />
+      <Navbar 
+        onSettingsChange={handleSettingsChange} 
+        gameSettings={gameSettings}
+        onNext={handleNext}
+        onRetry={handleRetry}
+      />
       <div className="app-container">
         {/* For development purposes - remove in production */}
         <div style={{ fontSize: '12px', marginBottom: '10px', color: '#fff' }}>Target: {targetWord}</div>

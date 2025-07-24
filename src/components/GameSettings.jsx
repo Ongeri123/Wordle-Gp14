@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
+/**
+ * Game settings component for difficulty and dark mode
+ */
 const GameSettings = ({ onSettingsChange, initialSettings }) => {
   const [difficulty, setDifficulty] = useState(initialSettings?.difficulty || 'normal');
   const [darkMode, setDarkMode] = useState(initialSettings?.darkMode || false);
@@ -11,12 +14,18 @@ const GameSettings = ({ onSettingsChange, initialSettings }) => {
     }
   }, []);
 
+  /**
+   * Handles difficulty level changes
+   */
   const handleDifficultyChange = (e) => {
     const newDifficulty = e.target.value;
     setDifficulty(newDifficulty);
     onSettingsChange({ difficulty: newDifficulty, darkMode });
   };
 
+  /**
+   * Toggles dark mode on/off
+   */
   const handleDarkModeToggle = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);

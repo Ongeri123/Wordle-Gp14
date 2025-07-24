@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Individual letter box with color-coded status
+ */
 const LetterBox = ({ letter, status }) => {
   const statusClasses = {
     correct: 'letter-box correct',

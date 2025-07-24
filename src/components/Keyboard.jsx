@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Virtual keyboard component with letter status indicators
+ */
 const Keyboard = ({ onKeyPress, letterStatus = {} }) => {
   const rows = [
     ['Q','W','E','R','T','Y','U','I','O','P'],
@@ -7,12 +10,18 @@ const Keyboard = ({ onKeyPress, letterStatus = {} }) => {
     ['Enter','Z','X','C','V','B','N','M','⌫']
   ];
 
+  /**
+   * Handles virtual keyboard button clicks
+   */
   const handleClick = (key) => {
     if (onKeyPress) {
       onKeyPress(key);
     }
   };
 
+  /**
+   * Returns CSS class based on key status
+   */
   const getKeyClass = (key) => {
     if (key === 'Enter' || key === '⌫') {
       return `key-btn wide`;
