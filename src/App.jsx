@@ -40,6 +40,16 @@ const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState({});
   const [gameSettings, setGameSettings] = useState({ difficulty: 'normal', darkMode: false });
+  const [gameStats, setGameStats] = useState(() => {
+    const savedStats = localStorage.getItem('wordleStats');
+    return savedStats ? JSON.parse(savedStats) : {
+      gamesPlayed: 0,
+      gamesWon: 0,
+      currentStreak: 0,
+      maxStreak: 0,
+      guessDistribution: [0, 0, 0, 0, 0, 0]
+    };
+  });
 
   // Game status checks
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
