@@ -37,10 +37,22 @@ const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState({});
   const [gameSettings, setGameSettings] = useState({ difficulty: 'normal', darkMode: false });
+  const [gameStats, setGameStats] = useState(() => {
+    // Try to load stats from localStorage
+    const savedStats = localStorage.getItem('wordleStats');
+    return savedStats ? JSON.parse(savedStats) : {
+      gamesPlayed: 0,
+      gamesWon: 0,
+      currentStreak: 0,
+      maxStreak: 0,
+      guessDistribution: [0, 0, 0, 0, 0, 0]
+    };
+  });
 
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
   const isLose = currentRow >= 6 && !isWin;
   const [showAlert, setShowAlert] = useState(true);
+  const [gameCompleted, setGameCompleted] = useState(false);
 
   // Check the current guess against the target word
   const checkGuess = (guess) => {
@@ -110,11 +122,17 @@ const App = () => {
           
           if (isCorrect) {
             setGameOver(true);
+            // Update stats for win
+            updateGameStats(true, currentRow);
+            setGameCompleted(true);
           } else if (currentRow < 5) {
             setCurrentRow(currentRow + 1);
             setCurrentCol(0);
           } else {
             setGameOver(true);
+            // Update stats for loss
+            updateGameStats(false);
+            setGameCompleted(true);
           }
         }
       }
@@ -139,6 +157,35 @@ const App = () => {
     };
   }, [currentRow, currentCol, gameOver]); // Removed guesses from dependency array to avoid unnecessary re-renders
 
+  // Function to update game statistics
+  const updateGameStats = (isWin, guessRow) => {
+    const newStats = { ...gameStats };
+    
+    // Update games played
+    newStats.gamesPlayed += 1;
+    
+    if (isWin) {
+      // Update wins and streak
+      newStats.gamesWon += 1;
+      newStats.currentStreak += 1;
+      
+      // Update max streak if needed
+      if (newStats.currentStreak > newStats.maxStreak) {
+        newStats.maxStreak = newStats.currentStreak;
+      }
+      
+      // Update guess distribution
+      newStats.guessDistribution[guessRow] += 1;
+    } else {
+      // Reset streak on loss
+      newStats.currentStreak = 0;
+    }
+    
+    // Save to state and localStorage
+    setGameStats(newStats);
+    localStorage.setItem('wordleStats', JSON.stringify(newStats));
+  };
+
   const handleSettingsChange = (newSettings) => {
     setGameSettings(newSettings);
     // Apply settings changes as needed
@@ -147,7 +194,11 @@ const App = () => {
 
   return (
     <div className={`app-wrapper ${gameSettings.darkMode ? 'dark-mode' : ''}`}>
-      <Navbar onSettingsChange={handleSettingsChange} gameSettings={gameSettings} />
+      <Navbar 
+        onSettingsChange={handleSettingsChange} 
+        gameSettings={gameSettings} 
+        gameStats={gameStats} 
+      />
       <div className="app-container">
         {/* For development purposes - remove in production */}
         <div style={{ fontSize: '12px', marginBottom: '10px', color: '#fff' }}>Target: {targetWord}</div>

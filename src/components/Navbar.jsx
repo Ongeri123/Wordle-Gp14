@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import GameSettings from './GameSettings';
+import Stats from './Stats';
 
-const Navbar = ({ onSettingsChange, gameSettings }) => {
+const Navbar = ({ onSettingsChange, gameSettings, gameStats }) => {
   const [showSettings, setShowSettings] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   return (
     <nav className="navbar">
       <div className="navbar-brand">Wordle</div>
       <div className="navbar-right">
         <button 
-          className="settings-toggle" 
+          className="navbar-button stats-button" 
+          onClick={() => setShowStats(true)}
+        >
+          📊 Stats
+        </button>
+        <button 
+          className="navbar-button settings-toggle" 
           onClick={() => setShowSettings(!showSettings)}
         >
           ⚙️ Settings
@@ -23,6 +31,11 @@ const Navbar = ({ onSettingsChange, gameSettings }) => {
           </div>
         )}
       </div>
+      <Stats 
+        isOpen={showStats} 
+        onClose={() => setShowStats(false)} 
+        gameStats={gameStats} 
+      />
     </nav>
   );
 };
