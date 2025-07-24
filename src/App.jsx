@@ -45,6 +45,7 @@ const App = () => {
   const isWin = guesses.some(row => row.every(l => l.status === 'correct'));
   const isLose = currentRow >= 6 && !isWin;
   const [showAlert, setShowAlert] = useState(true);
+  const [gameCompleted, setGameCompleted] = useState(false);
 
   /**
    * Evaluates a guess against the target word
@@ -121,11 +122,17 @@ const App = () => {
           
           if (isCorrect) {
             setGameOver(true);
+            // Update stats for win
+            updateGameStats(true, currentRow);
+            setGameCompleted(true);
           } else if (currentRow < 5) {
             setCurrentRow(currentRow + 1);
             setCurrentCol(0);
           } else {
             setGameOver(true);
+            // Update stats for loss
+            updateGameStats(false);
+            setGameCompleted(true);
           }
         }
       }
@@ -151,6 +158,37 @@ const App = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentRow, currentCol, gameOver]); // Removed guesses from dependency array to avoid unnecessary re-renders
+
+  /**
+   * Function to update game statistics
+   */
+  const updateGameStats = (isWin, guessRow) => {
+    const newStats = { ...gameStats };
+    
+    // Update games played
+    newStats.gamesPlayed += 1;
+    
+    if (isWin) {
+      // Update wins and streak
+      newStats.gamesWon += 1;
+      newStats.currentStreak += 1;
+      
+      // Update max streak if needed
+      if (newStats.currentStreak > newStats.maxStreak) {
+        newStats.maxStreak = newStats.currentStreak;
+      }
+      
+      // Update guess distribution
+      newStats.guessDistribution[guessRow] += 1;
+    } else {
+      // Reset streak on loss
+      newStats.currentStreak = 0;
+    }
+    
+    // Save to state and localStorage
+    setGameStats(newStats);
+    localStorage.setItem('wordleStats', JSON.stringify(newStats));
+  };
 
   /**
    * Updates game settings (difficulty, dark mode)
@@ -203,6 +241,11 @@ const App = () => {
       <Navbar 
         onSettingsChange={handleSettingsChange} 
         gameSettings={gameSettings}
+        gameStats={gameStats}
+        targetWord={targetWord}
+        guesses={guesses}
+        isWin={isWin}
+        currentRow={currentRow}
         onNext={handleNext}
         onRetry={handleRetry}
       />
