@@ -197,7 +197,11 @@ const App = () => {
       <Navbar 
         onSettingsChange={handleSettingsChange} 
         gameSettings={gameSettings} 
-        gameStats={gameStats} 
+        gameStats={gameStats}
+        targetWord={targetWord}
+        guesses={guesses}
+        isWin={isWin}
+        currentRow={currentRow}
       />
       <div className="app-container">
         {/* For development purposes - remove in production */}

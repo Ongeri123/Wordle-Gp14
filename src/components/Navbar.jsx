@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import GameSettings from './GameSettings';
 import Stats from './Stats';
 
-const Navbar = ({ onSettingsChange, gameSettings, gameStats }) => {
+const Navbar = ({ onSettingsChange, gameSettings, gameStats, targetWord, guesses, isWin, currentRow }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showStats, setShowStats] = useState(false);
 
@@ -34,7 +34,11 @@ const Navbar = ({ onSettingsChange, gameSettings, gameStats }) => {
       <Stats 
         isOpen={showStats} 
         onClose={() => setShowStats(false)} 
-        gameStats={gameStats} 
+        gameStats={gameStats}
+        targetWord={targetWord}
+        guesses={guesses}
+        isWin={isWin}
+        currentRow={currentRow}
       />
     </nav>
   );

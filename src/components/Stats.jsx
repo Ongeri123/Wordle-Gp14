@@ -1,6 +1,7 @@
 import React from 'react';
+import ShareResult from './ShareResult';
 
-const Stats = ({ isOpen, onClose, gameStats }) => {
+const Stats = ({ isOpen, onClose, gameStats, targetWord, guesses, isWin, currentRow }) => {
   const stats = gameStats || {
     gamesPlayed: 0,
     gamesWon: 0,
@@ -64,9 +65,13 @@ const Stats = ({ isOpen, onClose, gameStats }) => {
         </div>
         
         <div className="stats-footer">
-          <button className="share-button">
-            SHARE
-          </button>
+          <ShareResult 
+            gameStats={gameStats}
+            targetWord={targetWord}
+            guesses={guesses}
+            isWin={isWin}
+            currentRow={currentRow}
+          />
         </div>
       </div>
     </div>
