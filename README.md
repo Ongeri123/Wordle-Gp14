@@ -20,25 +20,28 @@ Keyboard Support**: Both virtual and physical keyboard input
 4. Use Backspace to delete letters
 
 ### Color Guide
+
 - 🟩 Green: Correct letter in correct position
 - 🟨 Yellow: Correct letter in wrong position
 - ⬛ Gray: Letter not in the word
 
 ## Installation
 
+### Clone the repository
 
-# Clone the repository
-git clone <repository-url>
+git clone [repository-url]
 
-# Navigate to project directory
+### Navigate to project directory
+
 cd Wordle-Gp14
 
-# Install dependencies
+### Install dependencies
+
 npm install
 
-# Start development server
-npm run dev
+### Start development server
 
+npm run dev
 
 ## Tech Stack
 
@@ -55,32 +58,23 @@ npm run dev
 - Help: View game instructions
 - Settings: Toggle dark mode and difficulty
 
-## Statistics
-
-The game tracks:
-- Games played
-- Win percentage
-- Current streak
-- Maximum streak
-- Guess distribution
-
-Statistics are saved locally and persist between sessions.
-
 ## Development
 
+## Run development server
 
-# Run development server
 npm run dev
 
-# Build for production
+## Build for production
+
 npm run build
 
-# Preview production build
+## Preview production build
+
 npm run preview
 
-# Run linter
-npm run lint
+## Run linter
 
+npm run lint
 
 ## File Structure
 
@@ -100,6 +94,7 @@ src/
 └── main.jsx              # App entry point
 
 ## Author
+
 Newton Orina
 Eric Muigai
 Weldon Macharia

@@ -12,7 +12,7 @@ const GameSettings = ({ onSettingsChange, initialSettings }) => {
     if (initialSettings?.darkMode) {
       document.body.classList.add('dark-mode-body');
     }
-  }, []);
+  }, [initialSettings?.darkMode]);
 
   /**
    * Handles difficulty level changes
